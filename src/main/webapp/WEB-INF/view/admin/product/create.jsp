@@ -10,12 +10,12 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                 <meta name="author" content="Hỏi Dân IT" />
-                <title>Create user - Hỏi Dân IT</title>
+                <title>Create product - Hỏi Dân IT</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
                 <script>
-                    $(document).ready(() => { //sau khi page load xong
+                    $(document).ready(() => {
                         const avatarFile = $("#avatarFile"); //lay bien voi id = avatarFile
                         avatarFile.change(function (e) { //khi file bi thay doi
                             const imgURL = URL.createObjectURL(e.target.files[0]); //lay duong link url bang web api co' san~
@@ -41,47 +41,47 @@
                                 <div class="mt-5">
                                     <div class="row">
                                         <div class="col-md-6 col-12 mx-auto">
-                                            <form:form method="post" action="/admin/user/create"
-                                                modelAttribute="newUser" class="row" enctype="multipart/form-data">
+                                            <form:form method="post" action="/admin/product/create"
+                                                modelAttribute="newProduct" class="row" enctype="multipart/form-data">
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="exampleInputEmail1" class="form-label">Email
-                                                        address</label>
+                                                    <label for="exampleInputEmail1" class="form-label">Name:</label>
                                                     <form:input type="email" class="form-control"
-                                                        id="exampleInputEmail1" path="email" />
+                                                        id="exampleInputEmail1" path="name" />
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="exampleInputPassword1"
-                                                        class="form-label">Password</label>
-                                                    <form:input type="password" class="form-control"
-                                                        id="exampleInputPassword1" path="password" />
-                                                </div>
-                                                <div class="mb-3 col-12 col-md-6">
-                                                    <label for="exampleInputPhoneNumber" class="form-label">Phone
-                                                        number</label>
+                                                    <label for="exampleInputPassword1" class="form-label">Price:</label>
                                                     <form:input type="number" class="form-control"
-                                                        id="exampleInputPhoneNumber" path="phone" />
+                                                        id="exampleInputPassword1" path="price" />
+                                                </div>
+                                                <div class="mb-5 col-12">
+                                                    <label class="form-label">Detail description:</label>
+                                                    <form:input type="text" class="form-control h-100"
+                                                        path="detailDesc" />
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="exampleInputFullname" class="form-label">Full
-                                                        name</label>
-                                                    <form:input type="text" class="form-control"
-                                                        id="exampleInputFullname" path="fullName" />
-                                                </div>
-                                                <div class="mb-3 col-12">
-                                                    <label for="exampleInputAddress" class="form-label">Address</label>
-                                                    <form:input type="text" class="form-control"
-                                                        id="exampleInputAddress" path="address" />
+                                                    <label class="form-label">Short description:</label>
+                                                    <form:input type="number" class="form-control" path="shortDesc" />
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="formSelectRole" class="form-label">Role</label>
-                                                    <form:select class="form-select" id="formSelectRole"
-                                                        path="role.name">
-                                                        <form:option value="ADMIN">ADMIN</form:option>
-                                                        <form:option value="USER">USER</form:option>
+                                                    <label class="form-label">Quantity:</label>
+                                                    <form:input type="number" class="form-control" path="quantity" />
+                                                </div>
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label">Factory:</label>
+                                                    <form:select class="form-select" path="factory">
+                                                        <form:option value="">...</form:option>
+                                                        <form:option value="">...</form:option>
                                                     </form:select>
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label for="avatarFile" class="form-label">Avatar</label>
+                                                    <label class="form-label">Target:</label>
+                                                    <form:select class="form-select" path="target">
+                                                        <form:option value="">...</form:option>
+                                                        <form:option value="">...</form:option>
+                                                    </form:select>
+                                                </div>
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label for="avatarFile" class="form-label">Avatar:</label>
                                                     <input class="form-control" type="file" id="avatarFile"
                                                         accept=".png, .jpg, .jpeg" name="imageFile" />
                                                 </div>

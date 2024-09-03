@@ -45,7 +45,8 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
 
-        return "/admin/user/show";// file html
+        return "/admin/user/show";// // return ve file view nhu html,jsp,... tuc la khi vao url "/" thi se hien
+                                  // thi file view ma chung ta return
     }
 
     @RequestMapping("/admin/user/{id}") // http
@@ -70,7 +71,7 @@ public class UserController {
 
     @PostMapping(value = "/admin/user/create")
     public String createUserPage(Model model, @ModelAttribute("newUser") User user,
-            @RequestParam("imageFile") MultipartFile file) { // khi nhan create, view se tra ve
+            @RequestParam("imageFile") MultipartFile file) { // khi nhan nut create, view se tra ve
                                                              // modelAttribute voi ten tuong
                                                              // ung, o day la user voi ten
                                                              // model la newUser
