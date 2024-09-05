@@ -12,7 +12,7 @@ import vn.hoidanit.laptopshop.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     // day la function, kphai la bien'
-    User save(User hoidanit); // == insert into user value()
+    User save(User user); // == insert into user value()
 
     User findById(long id);
 

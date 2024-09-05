@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.Valid;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -70,12 +73,24 @@ public class UserController {
     }
 
     @PostMapping(value = "/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") User user,
+    public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User user,
+            BindingResult newUserBindingResult,
             @RequestParam("imageFile") MultipartFile file) { // khi nhan nut create, view se tra ve
                                                              // modelAttribute voi ten tuong
                                                              // ung, o day la user voi ten
                                                              // model la newUser
+        // validate
+        List<FieldError> errors = newUserBindingResult.getFieldErrors(); // lấy ra danh sách lỗi
+        for (FieldError error : errors) { // vòng lặp lỗi
+            System.out.println(">>>>" + error.getField() + " - " + error.getDefaultMessage());
+        }
 
+        // validate
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/create";
+        }
+
+        //
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(user.getPassword());
 
@@ -123,11 +138,11 @@ public class UserController {
     @GetMapping("admin/user/delete/{id}")
     public String getDeleteUserPage(Model model, @PathVariable long id) {
         model.addAttribute("id", id);
-        model.addAttribute("user", new User());
+        model.addAttribute("user", this.userService.getUserById(id));
         return "admin/user/delete";
     }
 
-    @PostMapping("admin/user/delete")
+    @PostMapping("/admin/user/delete")
     public String getDeleteUser(@ModelAttribute("user") User user) {
         this.userService.deleteUserById(user.getId());
         return "redirect:/admin/user";

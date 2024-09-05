@@ -20,6 +20,9 @@ public class UploadService {
     }
 
     public String handleSaveUploadFile(MultipartFile file, String targetFolder) {
+        if (file.isEmpty())
+            return "";
+
         // noi luu tru file
         String rootPath = this.servletContext.getRealPath("/resources/images");
         String finalName = "";
@@ -46,6 +49,7 @@ public class UploadService {
         return finalName;
     }
 
+    // tu lam
     public String handleDisplayUploadedFile(String fileName, String targetFolder) {
         String rootPath = this.servletContext.getRealPath("/resources/images");
         return rootPath + File.separator + targetFolder + File.separator + fileName;

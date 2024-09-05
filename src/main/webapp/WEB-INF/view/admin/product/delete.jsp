@@ -11,7 +11,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                 <meta name="author" content="Hỏi Dân IT" />
-                <title>Delete users - Hỏi Dân IT</title>
+                <title>Delete product - Hỏi Dân IT</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
@@ -23,24 +23,24 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage users</h1>
+                                <h1 class="mt-4">Manage products</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
+                                    <li class="breadcrumb-item active">Products</li>
                                 </ol>
                                 <div class="m-5">
 
                                     <div class="col-10">
-                                        <h2>Delete user with id ${id}</h2>
+                                        <h2>Delete product with id ${id}</h2>
                                         <hr>
                                     </div>
                                     <div class="alert alert-danger" role="alert">
-                                        Are you sure want to delete this user?
+                                        Are you sure want to delete this product?
                                     </div>
-                                    <form:form method="post" action="/admin/user/delete" modelAttribute="user">
-                                        <div>
-                                            <form:input type="text" class="form-control" path="id" value="${id}"
-                                                style="display:none" />
+                                    <form:form method="post" action="/admin/product/delete" modelAttribute="product">
+                                        <div class="mb-3" style="display: none;">
+                                            <label class="form-label">Id:</label>
+                                            <form:input value="${id}" type="text" class="form-control" path="id" />
                                         </div>
                                         <button class="btn btn-danger">Confirm</button>
                                     </form:form>
