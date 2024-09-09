@@ -35,6 +35,10 @@ public class HomePageController {
         List<Product> products = productService.showAllProduct();
         model.addAttribute("products", products);
 
+        User user = userService.getUserByEmail("odinkun2003@gmail.com");
+
+        System.out.println(user);
+
         return "client/homepage/show";
     }
 
