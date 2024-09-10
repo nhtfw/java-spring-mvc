@@ -28,12 +28,18 @@
                                                 <h3 class="text-center font-weight-light my-4">Login</h3>
                                             </div>
                                             <div class="card-body">
-                                                <form:form method="post" action="/login">
-                                                    <!-- nếu trên đường link url có biến error -->
+                                                <form method="post" action="/login">
+                                                    <!-- nếu trên đường link url có biến(keyword) error -->
                                                     <c:if test="${param.error != null}">
                                                         <div class="my-2" style="color: red;">Invalid email or password.
                                                         </div>
                                                     </c:if>
+                                                    <!-- nếu trên đường link url có biến(keyword) logout -->
+                                                    <c:if test="${param.logout != null}">
+                                                        <div class="my-2" style="color: green;">Logout success.
+                                                        </div>
+                                                    </c:if>
+
                                                     <div class="form-floating mb-3">
                                                         <input class="form-control" type="email"
                                                             placeholder="name@example.com" name="username" />
@@ -41,7 +47,7 @@
                                                     </div>
                                                     <div class="form-floating mb-3">
                                                         <input class="form-control" type="password"
-                                                            placeholder="Password" name="username" />
+                                                            placeholder="Password" name="password" />
                                                         <label>Password</label>
                                                     </div>
                                                     <div>
@@ -56,7 +62,7 @@
                                                             </button>
                                                         </div>
                                                     </div>
-                                                </form:form>
+                                                </form>
                                             </div>
                                             <div class="card-footer text-center py-3">
                                                 <div class="small"><a href="/register">Need an account? Sign up!</a>

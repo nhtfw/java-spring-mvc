@@ -18,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userService = userService;
     }
 
+    // khi nguoi dung dang nhap
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         vn.hoidanit.laptopshop.domain.User user = userService.getUserByEmail(username);
@@ -28,7 +29,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new User(// user này là của spring security
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))); // quyền hạn của người dùng
+                // nạp vào quyền hạn của người dùng
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()))); // quyền hạn
+                                                                                                            // của người
+        // dùng
     }
 
 }

@@ -33,26 +33,16 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @RequestMapping("/") // gui yeu cau den sever
-    public String getHomePage(Model model) {
-        List<User> arrUsers = userService.getAllUsersByEmail("odinkun20303@gmail.com");
-        System.out.println(arrUsers);
-
-        model.addAttribute("eric", "test");
-        return "hello"; // return ve file view nhu html,jsp,... tuc la khi vao url "/" thi se hien thi
-                        // file view ma chung ta return
-    }
-
-    @RequestMapping("/admin/user") // http
+    @GetMapping("/admin/user") // http
     public String getUserPage(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
 
-        return "/admin/user/show";// // return ve file view nhu html,jsp,... tuc la khi vao url "/" thi se hien
-                                  // thi file view ma chung ta return
+        return "admin/user/show";// // return ve file view nhu html,jsp,... tuc la khi vao url "/" thi se hien
+                                 // thi file view ma chung ta return
     }
 
-    @RequestMapping("/admin/user/{id}") // http
+    @GetMapping("/admin/user/{id}") // http
     public String getUserDetailPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("user", user);
@@ -62,7 +52,7 @@ public class UserController {
         // model.addAttribute("fullname", user.getFullName());
         // model.addAttribute("address", user.getAddress());
 
-        return "/admin/user/detail";
+        return "admin/user/detail";
     }
 
     @GetMapping("/admin/user/create") // GET

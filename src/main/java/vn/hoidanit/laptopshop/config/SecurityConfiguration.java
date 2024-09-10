@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import jakarta.servlet.DispatcherType;
 import vn.hoidanit.laptopshop.service.CustomUserDetailsService;
@@ -51,15 +52,28 @@ public class SecurityConfiguration {
                                 DispatcherType.INCLUDE) //
                         .permitAll()
 
-                        .requestMatchers("/", "/login", "/register", "/client/**", "/css/**", "/js/**",
+                        // "/product/**" -> ** là gì không quan trọng
+                        .requestMatchers("/", "/login", "/register", "/product/**", "/client/**", "/css/**",
+                                "/js/**",
                                 "/images/**")// tất cả các đường link này đều được permit(cho phép)
                         .permitAll()
+
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())//
 
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login") // url
                         .failureUrl("/login?error") // khi login fail
-                        .permitAll()); // ai cũng có quyền vào
+                        .successHandler(customSuccessHandler()) // khi login thanh cong
+                        .permitAll()) // ai cũng có quyền vào
+                .exceptionHandling(ex -> ex.accessDeniedPage("/access_deny")); // handler loi 403 forbidden
+        // .logout((logout) -> logout.logoutSuccessUrl("/"));
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler();
     }
 }
