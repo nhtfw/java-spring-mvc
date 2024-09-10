@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import jakarta.servlet.DispatcherType;
 import vn.hoidanit.laptopshop.service.CustomUserDetailsService;
@@ -44,6 +46,21 @@ public class SecurityConfiguration {
         return authProvider;
     }
 
+    // login success
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomSuccessHandler();
+    }
+
+    // gia hạn session bằng remember me - config remember me
+    @Bean
+    public SpringSessionRememberMeServices rememberMeServices() {
+        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+        // optionally customize
+        rememberMeServices.setAlwaysRemember(true);
+        return rememberMeServices;
+    }
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -62,6 +79,20 @@ public class SecurityConfiguration {
 
                         .anyRequest().authenticated())//
 
+                .sessionManagement((sessionManagement) -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // luôn tạo mới session nếu như chưa có
+                                                                             // session
+                        .invalidSessionUrl("/logout?expired") // nếu hết hạn session -> logout
+                        .maximumSessions(1) // giới hạn 1 tải khoản đăng nhập tại một thời điểm, nếu đã đăng nhập từ
+                                            // thiết bị A rồi, thì thiết bị B không đăng nhập được bằng tài khoản đó nữa
+                        .maxSessionsPreventsLogin(false)) // nếu người thứ 2 đăng nhập vào sau, người trước sẽ bị đá ra.
+                                                          // Nếu là true, người thứ 2 phải chờ người 1 hết phiên đăng
+                                                          // nhập
+
+                // mỗi một lần logout ra, sẽ xóa cookies và báo cho server, session hết hạn
+                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+
+                .rememberMe(rememberMe -> rememberMe.rememberMeServices(rememberMeServices()))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login") // url
                         .failureUrl("/login?error") // khi login fail
@@ -72,8 +103,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationSuccessHandler customSuccessHandler() {
-        return new CustomSuccessHandler();
-    }
 }

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -16,10 +17,16 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.service.UserService;
 
+//khi người dùng login thành công
 public class CustomSuccessHandler implements AuthenticationSuccessHandler {
+    // chỉ sử dụng auto wired khi không làm test case cho class này
+    @Autowired
+    private UserService userService;
 
-    // phu trach chuyen huong trang
+    // phu trach chuyen huong trang tùy theo role
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     protected String determineTargetUrl(final Authentication authentication) {
@@ -42,7 +49,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     // dọn dẹp session
-    protected void clearAuthenticationAttributes(HttpServletRequest request) {
+    protected void clearAuthenticationAttributes(HttpServletRequest request, Authentication authentication) {
         // nếu đã tồn tại session rồi, nó sẽ sử dụng lại session đấy mà không tạo mới
         // false -> chỉ khi nào có session mới lấy ra, nếu k có k làm gì cả
         // không truyền phương thức vào getSession(), nếu không có sẽ tạo mới, nếu có
@@ -52,8 +59,19 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+
+        // get email
+        String email = authentication.getName();
+        // query user
+        User user = this.userService.getUserByEmail(email);
+
+        if (user != null) {
+            session.setAttribute("fullName", user.getFullName());
+            session.setAttribute("avatar", user.getAvatar());
+        }
     }
 
+    // hàm khi người dùng login thành công
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
@@ -69,7 +87,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         // redirect
         redirectStrategy.sendRedirect(request, response, targetUrl);
         // dọn dẹp session giúp tăng hiệu năng
-        clearAuthenticationAttributes(request);
+        clearAuthenticationAttributes(request, authentication);
     }
 
 }

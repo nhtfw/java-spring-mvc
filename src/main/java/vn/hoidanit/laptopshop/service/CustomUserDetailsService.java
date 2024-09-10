@@ -26,6 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
 
+        // trả về đối tượng user, chương trình sẽ lấy đối tượng này để so sánh với đối
+        // tượng nhập từ form login, nếu mật khẩu khớp -> login success
         return new User(// user này là của spring security
                 user.getEmail(),
                 user.getPassword(),
