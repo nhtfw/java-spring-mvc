@@ -1,5 +1,7 @@
 package vn.hoidanit.laptopshop.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +15,6 @@ public interface CartDetailsRepository extends JpaRepository<CartDetails, Long> 
     boolean existsByCartAndProduct(Cart cart, Product product);
 
     CartDetails findByCartAndProduct(Cart cart, Product product);
+
+    List<CartDetails> findAllByCart(Cart cart);
 }

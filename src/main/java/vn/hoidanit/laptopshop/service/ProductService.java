@@ -51,6 +51,7 @@ public class ProductService {
     }
 
     public void handleAddProductToCart(String email, long productId, HttpSession session) {
+
         User user = this.userRepository.findByEmail(email);
         if (user != null) {
             Cart cart = this.cartRepository.findByUser(user);
@@ -60,7 +61,6 @@ public class ProductService {
                 Cart otherCart = new Cart();
                 otherCart.setUser(user);
                 otherCart.setSum(0);
-
                 // vừa lưu và gán
                 cart = this.cartRepository.save(otherCart);
             }
@@ -99,4 +99,26 @@ public class ProductService {
         }
     }
 
+    // tu lam
+    public List<CartDetails> getAllCartDetails(String email) {
+        User user = this.userRepository.findByEmail(email);
+
+        if (user != null) {
+            Cart cart = this.cartRepository.findByUser(user);
+
+            if (cart != null) {
+                List<CartDetails> listCartDetails = this.cartDetailsRepository.findAllByCart(cart);
+
+                return listCartDetails;
+            } else {
+                //
+            }
+        }
+
+        return null;
+    }
+
+    public Cart fetchByUser(User user) {
+        return this.cartRepository.findByUser(user);
+    }
 }
