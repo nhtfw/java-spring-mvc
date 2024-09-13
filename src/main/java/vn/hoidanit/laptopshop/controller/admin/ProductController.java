@@ -71,7 +71,7 @@ public class ProductController {
 
         model.addAttribute("newProduct", this.productService.getProductById(id));
 
-        return "/admin/product/update";
+        return "admin/product/update";
     }
 
     @PostMapping("/admin/product/update")
