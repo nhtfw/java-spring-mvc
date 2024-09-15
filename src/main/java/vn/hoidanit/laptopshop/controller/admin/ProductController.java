@@ -1,5 +1,10 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,9 +32,17 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-    public String getProductPage(Model model) {
 
-        model.addAttribute("products", this.productService.showAllProduct());
+    public String getProductPage(Model model, @RequestParam("page") int page) {
+        // hash code limit vì nếu truyền limit qua query string(parameter) thì người
+        // dùng có thể nhập được litmit trên query string và gây ảnh hưởng tới view
+
+        // .of(page,length,new sort...) (số trang, số limit, sort)
+        Pageable pageable = PageRequest.of(page - 1, 2);
+        Page<Product> prs = this.productService.showAllProduct(pageable);
+
+        List<Product> listProducts = prs.getContent();
+        model.addAttribute("products", listProducts);
 
         return "admin/product/show";
     }

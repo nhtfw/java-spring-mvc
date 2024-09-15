@@ -1,5 +1,7 @@
 package vn.hoidanit.laptopshop.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpSession;
@@ -51,6 +53,10 @@ public class ProductService {
         return this.productRepository.findAll();
     }
 
+    public Page<Product> showAllProduct(Pageable pageable) {
+        return this.productRepository.findAll(pageable);
+    }
+
     public Product getProductById(long id) {
         return this.productRepository.findTop1ById(id);
     }
@@ -59,7 +65,7 @@ public class ProductService {
         this.productRepository.deleteById(id);
     }
 
-    public void handleAddProductToCart(String email, long productId, HttpSession session) {
+    public void handleAddProductToCart(String email, long productId, HttpSession session, long quantity) {
 
         User user = this.userRepository.findByEmail(email);
         if (user != null) {
@@ -88,7 +94,7 @@ public class ProductService {
                     cartDetails.setCart(cart);
                     cartDetails.setProduct(realProduct);
                     cartDetails.setPrice(realProduct.getPrice());
-                    cartDetails.setQuantity(1);
+                    cartDetails.setQuantity(quantity);
 
                     this.cartDetailsRepository.save(cartDetails);
 
@@ -101,7 +107,7 @@ public class ProductService {
                     session.setAttribute("sum", sum);
                 } else {
                     // nếu đã có, tăng số lượng lên 1 và cập nhật
-                    oldCartDetails.setQuantity(oldCartDetails.getQuantity() + 1);
+                    oldCartDetails.setQuantity(oldCartDetails.getQuantity() + quantity);
                     this.cartDetailsRepository.save(oldCartDetails);
                 }
             }

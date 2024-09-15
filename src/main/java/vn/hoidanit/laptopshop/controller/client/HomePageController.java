@@ -1,7 +1,9 @@
 package vn.hoidanit.laptopshop.controller.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
+import vn.hoidanit.laptopshop.service.OrderService;
 import vn.hoidanit.laptopshop.service.ProductService;
 import vn.hoidanit.laptopshop.service.UserService;
 
@@ -23,6 +29,9 @@ public class HomePageController {
     private final ProductService productService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private OrderService orderService;
 
     public HomePageController(ProductService productService, UserService userService, PasswordEncoder passwordEncoder) {
         this.productService = productService;
@@ -76,5 +85,24 @@ public class HomePageController {
     public String getDenyPage(Model model) {
 
         return "client/auth/deny";
+    }
+
+    @GetMapping("/order-history")
+    public String getOrderHistoryPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+
+        long id = (long) session.getAttribute("id");
+        User user = new User();
+        user.setId(id);
+
+        List<Order> orders = this.orderService.handleGetAllOrderByUser(user);
+
+        if (orders.size() > 0) {
+            model.addAttribute("orders", orders);
+        } else {
+            model.addAttribute("orders", new ArrayList<Order>());
+        }
+
+        return "client/cart/order";
     }
 }
