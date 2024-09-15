@@ -1,6 +1,7 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,18 +33,34 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-
-    public String getProductPage(Model model, @RequestParam("page") int page) {
+    // trong trường hợp tham số page không có value, ta thiết lập value mặc định =1
+    public String getProductPage(Model model,
+            @RequestParam(name = "page", defaultValue = "1") String pageOptional) {
         // hash code limit vì nếu truyền limit qua query string(parameter) thì người
         // dùng có thể nhập được litmit trên query string và gây ảnh hưởng tới view
 
-        // .of(page,length,new sort...) (số trang, số limit, sort)
-        Pageable pageable = PageRequest.of(page - 1, 2);
+        // fix bug nếu người dùng nhập ?page= là chữ, đó cũng là lí do dùng String thay
+        // vì int
+        int page = 1;
+        try {
+            page = Integer.parseInt(pageOptional);
+        } catch (Exception e) {
+
+        }
+
+        // .of(page,length,new sort...) (số trang hiện tại, số limit tức số bản ghi của
+        // một lần lấy, sort)
+        // -1 vì đếm từ 0
+        Pageable pageable = PageRequest.of(page - 1, 5);
         Page<Product> prs = this.productService.showAllProduct(pageable);
 
+        // lấy và chuyển sang list
         List<Product> listProducts = prs.getContent();
         model.addAttribute("products", listProducts);
-
+        // lấy tham số trang hiện tại
+        model.addAttribute("currentPage", page);
+        // lấy tổng số trang
+        model.addAttribute("totalPages", prs.getTotalPages());
         return "admin/product/show";
     }
 

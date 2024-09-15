@@ -71,19 +71,30 @@
                                             </table>
                                             <nav aria-label="Page navigation example">
                                                 <ul class="pagination justify-content-center">
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="#" aria-label="Previous">
+                                                    <li class="page-item ${currentPage eq 1 ? 'disabled' : ''}">
+                                                        <a class="page-link"
+                                                            href="/admin/product?page=${currentPage - 1}"
+                                                            aria-label="Previous">
                                                             <span aria-hidden="true">&laquo;</span>
                                                         </a>
                                                     </li>
-                                                    <li class="page-item"><a class="page-link"
-                                                            href="/admin/product?page=1">1</a></li>
-                                                    <li class="page-item"><a class="page-link"
-                                                            href="/admin/product?page=2">2</a></li>
-                                                    <li class="page-item"><a class="page-link"
-                                                            href="/admin/product?page=3">3</a></li>
+                                                    <!-- bắt đầu từ trang 1 đến trang cuối cùng, totalPages trả về tổng số
+                                                    trang -->
+                                                    <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                                                        <li class="page-item">
+                                                            <!-- nếu index == currentpage -->
+                                                            <a class="page-link ${(loop.index + 1) eq currentPage ? 'active' : ''}"
+                                                                href="/admin/product?page=${loop.index + 1}">
+                                                                <!-- index là chỉ số của lần lặp hiện tại, bắt đầu từ 0, vì trang bắt đầu từ 1 nên + 1 -->
+                                                                ${loop.index + 1}
+                                                            </a>
+                                                        </li>
+                                                    </c:forEach>
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#" aria-label="Next">
+                                                        <!-- nếu currentpage là trang cuối -->
+                                                        <a class="page-link ${currentPage eq (totalPages) ? 'disabled' : ''}"
+                                                            href="/admin/product?page=${currentPage + 1}"
+                                                            aria-label="Next">
                                                             <span aria-hidden="true">&raquo;</span>
                                                         </a>
                                                     </li>
