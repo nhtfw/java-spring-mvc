@@ -3,6 +3,8 @@ package vn.hoidanit.laptopshop.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.Order;
@@ -19,6 +21,10 @@ public class OrderService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    public Page<Order> handleShowAllOrders(Pageable pageable) {
+        return this.orderRepository.findAll(pageable);
+    }
 
     public List<Order> handleShowAllOrders() {
         return this.orderRepository.findAll();

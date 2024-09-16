@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -43,12 +47,27 @@ public class HomePageController {
     public String getHomePage(Model model) {
         List<Product> products = productService.showAllProduct();
         model.addAttribute("products", products);
-
-        User user = userService.getUserByEmail("odinkun2003@gmail.com");
-
-        System.out.println(user);
-
         return "client/homepage/show";
+    }
+
+    @GetMapping("/products")
+    public String getProductsPage(Model model, @RequestParam(name = "page", defaultValue = "1") String pageOptional) {
+        int page;
+        try {
+            page = Integer.parseInt(pageOptional);
+        } catch (Exception e) {
+            page = 1;
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, 6);
+        Page<Product> prs = this.productService.showAllProduct(pageable);
+
+        List<Product> products = prs.getContent();
+        model.addAttribute("products", products);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", prs.getTotalPages());
+
+        return "client/product/show";
     }
 
     @GetMapping("/register")

@@ -1,6 +1,10 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
+import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
@@ -34,9 +39,22 @@ public class UserController {
     }
 
     @GetMapping("/admin/user") // http
-    public String getUserPage(Model model) {
-        List<User> users = userService.getAllUsers();
+    public String getUserPage(Model model, @RequestParam(value = "page", defaultValue = "1") String page) {
+        int currentPage = 1;
+
+        try {
+            currentPage = Integer.parseInt(page);
+        } catch (Exception e) {
+        }
+
+        Pageable pageable = PageRequest.of(currentPage - 1, 1);
+        Page<User> prs = this.userService.getAllUsers(pageable);
+
+        List<User> users = prs.getContent();
         model.addAttribute("users", users);
+        model.addAttribute("currentPage", page);
+        // lấy tổng số trang
+        model.addAttribute("totalPages", prs.getTotalPages());
 
         return "admin/user/show";// // return ve file view nhu html,jsp,... tuc la khi vao url "/" thi se hien
                                  // thi file view ma chung ta return

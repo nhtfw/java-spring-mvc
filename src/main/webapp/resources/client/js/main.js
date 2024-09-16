@@ -127,7 +127,25 @@
         $('#videoModal').on('hide.bs.modal', function (e) {
             $("#video").attr('src', $videoSrc);
         })
+
+        //add active class to header
+        const navElement = $("#navbarCollapse");
+        const currentUrl = window.location.pathname; //current url
+        navElement.find('a.nav-link').each(function () { //lặp tìm a.nav-link
+            //lấy thẻ a
+            const link = $(this); // Get the current link in the loop
+            //lấy value thuộc tính href
+            const href = link.attr('href'); // Get the href attribute of the link
+
+            if (href === currentUrl) {
+                link.addClass('active'); // Add 'active' class if the href matches the current URL
+            } else {
+                link.removeClass('active'); // Remove 'active' class if the href does not match
+            }
+        });
     });
+
+
 
 
 

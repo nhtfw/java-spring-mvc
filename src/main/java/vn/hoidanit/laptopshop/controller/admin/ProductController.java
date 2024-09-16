@@ -48,7 +48,8 @@ public class ProductController {
 
         }
 
-        // .of(page,length,new sort...) (số trang hiện tại, số limit tức số bản ghi của
+        // config với pageable
+        // .of(page,length,new sort...) (số trang bắt đầu, số limit tức số bản ghi của
         // một lần lấy, sort)
         // -1 vì đếm từ 0
         Pageable pageable = PageRequest.of(page - 1, 5);
