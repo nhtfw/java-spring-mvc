@@ -2,6 +2,7 @@ package vn.hoidanit.laptopshop.controller.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,8 @@ public class HomePageController {
     }
 
     @GetMapping("/products")
-    public String getProductsPage(Model model, @RequestParam(name = "page", defaultValue = "1") String pageOptional) {
+    public String getProductsPage(Model model, @RequestParam(name = "page", defaultValue = "1") String pageOptional,
+            @RequestParam("name") Optional<String> nameOptional) {
         int page;
         try {
             page = Integer.parseInt(pageOptional);
@@ -60,7 +62,9 @@ public class HomePageController {
         }
 
         Pageable pageable = PageRequest.of(page - 1, 6);
-        Page<Product> prs = this.productService.showAllProduct(pageable);
+
+        String name = nameOptional.isPresent() ? nameOptional.get() : "";
+        Page<Product> prs = this.productService.showAllProduct(pageable, name);
 
         List<Product> products = prs.getContent();
         model.addAttribute("products", products);

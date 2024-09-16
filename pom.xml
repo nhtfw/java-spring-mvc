@@ -95,6 +95,7 @@
 		</dependency>
 
 		<!-- làm việc với filter -->
+		<!-- được sử dụng để tự động tạo các "metamodel" (mô hình siêu dữ liệu) cho các entity trong JPA (Java Persistence API) -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>

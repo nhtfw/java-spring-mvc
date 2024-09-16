@@ -21,8 +21,7 @@ import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
-
-import jakarta.servlet.http.HttpSession;
+import vn.hoidanit.laptopshop.service.specification.ProductSpecs;
 
 @Service
 public class ProductService {
@@ -55,6 +54,11 @@ public class ProductService {
 
     public Page<Product> showAllProduct(Pageable pageable) {
         return this.productRepository.findAll(pageable);
+    }
+
+    public Page<Product> showAllProduct(Pageable page, String name) {
+        // this.nameLike() trả về Specification
+        return this.productRepository.findAll(ProductSpecs.nameLike(name), page);
     }
 
     public Product getProductById(long id) {

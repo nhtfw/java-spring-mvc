@@ -49,8 +49,11 @@ public class ProductController {
         }
 
         // config với pageable
-        // .of(page,length,new sort...) (số trang bắt đầu, số limit tức số bản ghi của
-        // một lần lấy, sort)
+        // .of(page,length,new sort...) -> (số thứ tự trang phải show, ví dụ: tham số là
+        // 2, chúng ta bỏ đi 5 bản ghi đầu tiên và chỉ lấy 5 bản ghi tiếp theo; số limit
+        // tức số
+        // bản
+        // ghi của một lần lấy; sort)
         // -1 vì đếm từ 0
         Pageable pageable = PageRequest.of(page - 1, 5);
         Page<Product> prs = this.productService.showAllProduct(pageable);
