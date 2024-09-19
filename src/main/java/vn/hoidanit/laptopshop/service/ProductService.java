@@ -187,7 +187,7 @@ public class ProductService {
             // Set the appropriate min and max based on the price range string
             switch (p) {
                 case "duoi-10-trieu":
-                    min = 0;
+                    min = 1;
                     max = 10000000;
                     break;
                 case "10-15-trieu":
@@ -260,7 +260,7 @@ public class ProductService {
                     this.cartRepository.save(cart);
 
                     // cập nhật session sum
-                    session.setAttribute("sum", sum);
+                    session.setAttribute("sum", cart.getSum());
                 } else {
                     // nếu đã có, tăng số lượng lên 1 và cập nhật
                     oldCartDetails.setQuantity(oldCartDetails.getQuantity() + quantity);

@@ -70,7 +70,8 @@ public class SecurityConfiguration {
                         .permitAll()
 
                         // "/product/**" -> ** là gì không quan trọng
-                        .requestMatchers("/", "/login", "/register", "/product/**", "/client/**", "/css/**",
+                        .requestMatchers("/", "/login", "/register", "/products/**", "/product/**", "/client/**",
+                                "/css/**",
                                 "/js/**",
                                 "/images/**")// tất cả các đường link này đều được permit(cho phép)
                         .permitAll()
@@ -89,8 +90,11 @@ public class SecurityConfiguration {
                                                           // Nếu là true, người thứ 2 phải chờ người 1 hết phiên đăng
                                                           // nhập
 
+                .csrf(token -> token.disable()) // Tất cả các method post không cần truyền csrf token, không khuyến
+                                                // khích vì làm giảm độ an toàn thông tin
+
                 // mỗi một lần logout ra, sẽ xóa cookies và báo cho server, session hết hạn
-                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true).logoutSuccessUrl("/"))
 
                 .rememberMe(rememberMe -> rememberMe.rememberMeServices(rememberMeServices()))
                 .formLogin(formLogin -> formLogin
@@ -99,7 +103,6 @@ public class SecurityConfiguration {
                         .successHandler(customSuccessHandler()) // khi login thanh cong
                         .permitAll()) // ai cũng có quyền vào
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access_deny")); // handler loi 403 forbidden
-        // .logout((logout) -> logout.logoutSuccessUrl("/"));
         return http.build();
     }
 
