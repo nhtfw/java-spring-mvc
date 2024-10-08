@@ -70,7 +70,8 @@ public class SecurityConfiguration {
                         .permitAll()
 
                         // "/product/**" -> ** là gì không quan trọng
-                        .requestMatchers("/", "/login", "/register", "/product/**", "/client/**", "/css/**",
+                        .requestMatchers("/", "/login", "/register", "/product/**", "/products", "/client/**",
+                                "/css/**",
                                 "/js/**",
                                 "/images/**")// tất cả các đường link này đều được permit(cho phép)
                         .permitAll()

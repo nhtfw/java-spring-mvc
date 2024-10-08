@@ -97,7 +97,7 @@ public class ProductController {
 
         model.addAttribute("product", this.productService.getProductById(id));
 
-        return "/admin/product/detail";
+        return "admin/product/detail";
     }
 
     @GetMapping("/admin/product/update/{id}")
